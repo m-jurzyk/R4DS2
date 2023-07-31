@@ -202,8 +202,14 @@ my_varıable
 my_variable <- 10
 my_variable
 
-#2 libary(tidyverse)
+#2 library(tidyverse)
+
+?mpg
 
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x=displ, y = hwy))
+
+
+#4  Data transformation ----
+
 
