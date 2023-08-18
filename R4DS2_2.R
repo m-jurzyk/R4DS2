@@ -16,7 +16,7 @@ library(tidyverse)
     "ggrepel", "ggridges", "ggthemes", "hexbin", "janitor", "Lahman", 
     "leaflet", "maps", "nycflights13", "openxlsx", "palmerpenguins", 
     "repurrrsive", "tidymodels", "writexl")
-)
+
 
 # 2.1 Introduction ---- 
 
@@ -202,7 +202,9 @@ my_varıable
 my_variable <- 10
 my_variable
 
-#2 library(tidyverse)
+#2 
+
+library(tidyverse)
 
 ?mpg
 
@@ -210,6 +212,108 @@ ggplot(data = mpg) +
   geom_point(mapping = aes(x=displ, y = hwy))
 
 
+
 #4  Data transformation ----
+
+library(nycflights13)
+
+flights %>% glimpse()
+
+flights %>% 
+  filter(dest == "IAH") %>% 
+  group_by(year, month, day) %>% 
+  summarize(
+    arr_delay = mean(arr_delay, na.rm = TRUE)
+  )
+
+##4.2 Rows ----
+
+
+flights |> 
+  filter(month == 1 & day == 1)
+
+jan1 <- flights |> 
+  filter(month == 1 & day == 1)
+
+flights |> 
+  arrange(year, month, day, dep_time)
+
+
+flights |> 
+  distinct(origin, dest, .keep_all = TRUE)
+
+
+###4.2.5 Exercises ----
+
+
+#### 1.0 In a single pipeline for each condition, find all flights that meet the condition: ----
+  
+?flights
+#Had an arrival delay of two or more hours
+
+flights %>% filter(
+  arr_delay>=120
+)
+
+#Flew to Houston (IAH or HOU)
+
+flights %>% filter(
+  arr_delay>=120 & (dest == "IAH" | dest == "HOU"))
+
+#Were operated by United "UA", American "AA", or Delta "DL"
+
+airlines %>% view()
+
+flights %>% filter(
+  arr_delay>=120 & 
+    (dest == "IAH" | dest == "HOU" ) &
+    carrier == "UA" | carrier== "AA" |carrier =="DL")
+  
+
+#Departed in summer (July, August, and September)
+
+flights %>%
+  filter(
+    month == 7 &
+      arr_delay>=120 & 
+      (dest == "IAH" | dest == "HOU" ) &
+      carrier == "UA" | carrier== "AA" |carrier =="DL")
+
+
+flights %>%
+  filter(
+    month == 7 &
+      arr_delay >= 120 &
+      (dest == "IAH" | dest == "HOU") &
+      (carrier == "UA" | carrier == "AA" | carrier == "DL")
+  )
+
+#Arrived more than two hours late, but didn’t leave late
+
+flights %>% filter(
+  arr_delay>=120 &
+    dep_delay<=0)
+
+#Were delayed by at least an hour, but made up over 30 minutes in flight
+
+flights %>% filter(
+  arr_delay<=30 &
+    dep_delay>=60)
+
+####2.0 Sort flights to find the flights with longest departure delays. Find the flights that left earliest in the morning. ----
+
+flights %>% arrange(desc(
+    dep_delay))
+
+flights %>% arrange(hour)
+
+#### 3.0 Sort flights to find the fastest flights. (Hint: Try including a math calculation inside of your function.)----
+
+flights %>% mutate(
+  speed = distance/(air_time/60)
+) %>% select(flight, tailnum, origin, air_time, distance, speed) %>% 
+  arrange(desc(speed))
+
+#### 4.0 Was there a flight on every day of 2013? ----
 
 
